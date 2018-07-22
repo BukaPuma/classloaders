@@ -13,7 +13,7 @@ public class CounterFactory {
             public Class loadClass( String name ) throws ClassNotFoundException {
                 if ( "ru.sbt.leak.Counter".equals( name ) )
                     return findClass( name );
-                return super.loadClass( name );
+                  return super.loadClass( name );
             }
         };
 

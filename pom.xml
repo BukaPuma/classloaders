@@ -7,6 +7,13 @@
     <groupId>ru.sbt</groupId>
     <artifactId>classloaders</artifactId>
     <version>1.0-SNAPSHOT</version>
+    <dependencies>
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-core</artifactId>
+            <version>5.2.17.Final</version>
+        </dependency>
+    </dependencies>
     <packaging>jar</packaging>
 
     <properties>

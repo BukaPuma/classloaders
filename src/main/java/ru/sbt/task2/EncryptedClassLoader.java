@@ -1,6 +1,7 @@
 package ru.sbt.task2;
 
-import java.io.File;
+import java.io.*;
+import java.net.URLClassLoader;
 
 /**
  * Данный класслоадер умеет загружать классы из файлов дешифрую их. Ваша задача переопределить метод findClass().
@@ -19,5 +20,60 @@ public class EncryptedClassLoader extends ClassLoader {
         this.key = key;
         this.dir = dir;
     }
+
+
+        @Override
+        public Class<?> findClass(String className) throws ClassNotFoundException {
+            try {
+                byte b[] = fetchClassFromFS(dir + "\\" + className + ".class", key);
+                return defineClass(className, b, 0, b.length);
+            } catch (FileNotFoundException ex) {
+               System.out.println( dir + "\\" + className + ".class"+ "не найден");
+                return super.findClass(className);
+            } catch (IOException ex) {
+                return super.findClass(className);
+            }
+
+        }
+    private byte[] fetchClassFromFS(String path, String key) throws FileNotFoundException, IOException {
+
+        InputStream is = new FileInputStream(new File(path));
+        OutputStream os = new FileOutputStream(new File("TestClassEncoded.java"));
+
+
+        long length = new File(path).length();
+        if (length > Integer.MAX_VALUE) {
+            throw new IOException("File is too large "+path);
+        }
+
+        byte[] bytes = new byte[(int)length];
+        int bytesCounter = -1;
+        while (is.available()>0)
+        {
+            bytesCounter++;
+            byte data = ( byte ) is.read(  );
+            byte datawrite;
+            try {
+                int iKey = Integer.parseInt( key );
+                bytes[ bytesCounter ] = ( byte ) ( data - iKey );
+                os.write( bytes[ bytesCounter ] );
+            }
+            catch ( NumberFormatException e ) {
+                System.out.println( "Введите целое число." );
+            }
+
+        }
+
+        is.close();
+        os.close();
+
+        return bytes;
+
+    }
 }
+
+
+
+
+
 
